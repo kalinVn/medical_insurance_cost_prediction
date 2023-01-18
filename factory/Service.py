@@ -1,15 +1,18 @@
 import config
 from service.MedicalInsurancePrediction import MedicalInsurancePrediction
-from service.MedicalInsurancePrediction import MedicalInsurancePrediction
+from service.MedicalInsurancePredictionKeras import MedicalInsurancePredictionKeras
 
 
 class Service:
 
     def __init__(self):
-        self.service_type = config.SERVICE_TYPE
+        self.engine = config.ENGINE
 
     def get_service(self):
-        if self.service_type == "ML":
+
+        if self.engine == "Sklearn":
             return MedicalInsurancePrediction()
+        elif self.engine == "Keras":
+            return MedicalInsurancePredictionKeras()
         else:
             return MedicalInsurancePrediction()

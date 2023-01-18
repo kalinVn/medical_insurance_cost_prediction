@@ -1,14 +1,13 @@
 import pandas as pd
 import numpy as np
 import config
-
+import tensorflow as tf
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
-from factory.Classifier import Classifier
 
 
-class MedicalInsurancePrediction:
+class MedicalInsurancePredictionKeras:
 
     def __init__(self):
         self.standard_data = None
@@ -23,8 +22,15 @@ class MedicalInsurancePrediction:
         self.dataset = pd.read_csv(csv_path)
 
         self.scaler = StandardScaler()
-        self.classifier_factory = Classifier()
-        self.model = self.classifier_factory.get_model()
+
+        self.model = tf.keras.Sequential([
+              tf.keras.layers.Dense(400, activation="relu"),
+              tf.keras.layers.Dense(100, activation="relu"),
+              tf.keras.layers.Dense(100, activation="relu"),
+              tf.keras.layers.Dense(100, activation="relu"),
+              tf.keras.layers.Dense(1)
+        ])
+
 
     def get_dataset(self):
         return self.dataset
@@ -40,7 +46,11 @@ class MedicalInsurancePrediction:
     def build(self):
         self.x_train, self.x_test, self.y_train, self.y_test = train_test_split(self.x, self.y, test_size=0.2,
                                                                                 random_state=2)
-        self.model.fit(self.x, self.y)
+        self.model.compile(loss=tf.keras.losses.mae,
+                                optimizer=tf.keras.optimizers.Adam(),
+                                metrics=['mae'])
+        self.model.fit(self.x, self.y, epochs=200, verbose=0)
+        # self.model.evaluate(self.x_test, self.y_test)
 
     def test_accuracy_score(self):
         x_train_prediction = self.model.predict(self.x_train)
@@ -51,11 +61,10 @@ class MedicalInsurancePrediction:
         test_data_accuracy = metrics.r2_score(self.y_test, x_test_prediction)
         print("Accuracy on test data: ", test_data_accuracy)
 
+
+
     def predict(self, data):
-        inputs = np.array([data])
-        columns = list(self.dataset.columns)[:-1]
-        df = pd.DataFrame(inputs, columns=columns)
+        prediction = self.model.predict([data])
 
-        prediction = self.model.predict(df)
+        print('Insurance cost is USD: ', prediction[0][0])
 
-        print('Insurance cost is USD: ', prediction[0])

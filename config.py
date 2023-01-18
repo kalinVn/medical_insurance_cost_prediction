@@ -1,3 +1,3 @@
 CSV_PATH = 'data/insurance.csv'
-SERVICE_TYPE = 'ML'
+ENGINE = 'Sklearn'
 MODEL = 'linear_regression'
