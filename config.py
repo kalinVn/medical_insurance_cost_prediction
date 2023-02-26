@@ -1,3 +1,4 @@
 CSV_PATH = 'data/insurance.csv'
-ENGINE = 'Sklearn'
+ENGINE = 'Keras'
+# ENGINE = 'Sklearn'
 MODEL = 'linear_regression'

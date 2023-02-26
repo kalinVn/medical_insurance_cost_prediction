@@ -1,4 +1,4 @@
-# credit_card_fraud_detection
+# medical insurance prediction
 
 1. Choose custom sklearn machine learning engine 
     1.1. Set config.py ENGINE - 'Sklearn'
