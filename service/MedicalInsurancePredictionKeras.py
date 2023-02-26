@@ -17,6 +17,7 @@ class MedicalInsurancePredictionKeras:
         self.x_test = None
         self.y_train = None
         self.y_test = None
+        self.history = None
 
         csv_path = config.CSV_PATH
         self.dataset = pd.read_csv(csv_path)
@@ -31,9 +32,11 @@ class MedicalInsurancePredictionKeras:
               tf.keras.layers.Dense(1)
         ])
 
-
     def get_dataset(self):
         return self.dataset
+
+    def get_history(self):
+        return self.history
 
     def preprocess(self):
         self.dataset.replace({'sex': {'male': 0, 'female': 1}}, inplace=True)
@@ -49,7 +52,7 @@ class MedicalInsurancePredictionKeras:
         self.model.compile(loss=tf.keras.losses.mae,
                                 optimizer=tf.keras.optimizers.Adam(),
                                 metrics=['mae'])
-        self.model.fit(self.x, self.y, epochs=200, verbose=0)
+        self.history = self.model.fit(self.x, self.y, epochs=200, verbose=0)
         # self.model.evaluate(self.x_test, self.y_test)
 
     def test_accuracy_score(self):
@@ -62,9 +65,9 @@ class MedicalInsurancePredictionKeras:
         print("Accuracy on test data: ", test_data_accuracy)
 
 
-
     def predict(self, data):
         prediction = self.model.predict([data])
 
         print('Insurance cost is USD: ', prediction[0][0])
+
 
